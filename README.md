@@ -1,1 +1,1 @@
-# solve_maze
+# run file main.py
