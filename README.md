@@ -1,1 +1,4 @@
-# run file main.py
+# library use
+# numpy 
+# pygame
+
