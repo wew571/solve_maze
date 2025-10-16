@@ -4,6 +4,8 @@ import maze
 import pygame
 import time_solve
 
+from timeit import default_timer
+
 def heuristic(p1, p2):
     x1, y1 = p1 # spliting values from a tuple
     x2, y2 = p2
@@ -20,6 +22,9 @@ def algorithm(draw, grid, start, end, counter_start):
     
     f_score = {spot: float("inf") for row in grid for spot in row}
     f_score[start] = heuristic(start.get_pos(), end.get_pos())
+
+    nodes_open = 0
+    nodes_close = 0
     
     open_set_hash = {start}
     while not open_set.empty():
@@ -29,12 +34,19 @@ def algorithm(draw, grid, start, end, counter_start):
 
         current = open_set.get()[2]
         open_set_hash.remove(current)
+        nodes_close += 1
 
         if current == end:
-            time_solve.reconstruct_path(node_path, end, draw, counter_start)
+            path_data = time_solve.reconstruct_path(node_path, end, draw, counter_start)
             end.make_end()
             start.make_start()
-            return True
+            return {
+                'time': path_data['time'],
+                'nodes_opened': nodes_open,
+                'nodes_closed': nodes_close,
+                'path_length': path_data['path_length'],
+                'path_found': True
+            }
 
         for neighbour in current.neighbours:
             temp_g_score = g_score[current] + 1
@@ -46,6 +58,7 @@ def algorithm(draw, grid, start, end, counter_start):
                 
                 if neighbour not in open_set_hash:
                     count += 1
+                    nodes_open += 1
                     open_set.put((f_score[neighbour], count, neighbour))
                     open_set_hash.add(neighbour)
                     neighbour.make_open_astar()
@@ -55,4 +68,11 @@ def algorithm(draw, grid, start, end, counter_start):
             current.make_close_astar()
 
     pygame.display.set_caption("Maze Solver ( Unable To Find The Target Node ! )")
-    return False
+
+    return {
+        'time': default_timer() - counter_start,
+        'nodes_opened': nodes_open,
+        'nodes_closed': nodes_close,
+        'path_length': 0,
+        'path_found': False
+    }
