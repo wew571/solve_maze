@@ -1,18 +1,31 @@
 from timeit import default_timer
 from grid import make_grid
 from grid import draw
+
+import color
 import astar
 import breath_first_search
 import depth_first_search
 import best_first_search
 
 import pygame
+import random
+
+pygame.init()
 
 def get_mouse_pos(pos, rows, width):
     gap = width // rows
     y, x = pos
+
+    if x >= width:
+        return None , None
+
     row = y // gap
     col = x // gap
+
+    if row >= rows or col >= rows:
+        return None, None
+
     return row, col
 
 def main(win, width):
@@ -107,5 +120,6 @@ def main(win, width):
                     grid = make_grid(ROWS, width) 
 
     pygame.quit()
+
 
 
