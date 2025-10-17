@@ -35,14 +35,33 @@ def build(draw , grid , start , end):
                 grid[mid_row][mid_col].reset()
                 generation(new_row , new_col)
 
-    start_r, start_c = start.get_pos()
-    generation(start_r, start_c)
+    start_row, start_col = start.get_pos()
+    generation(start_row, start_col)
 
     x_end , y_end = end.get_pos()
-    if grid[x_end+1][y_end].is_wall() and grid[x_end-1][y_end].is_wall() and grid[x_end][y_end+1].is_wall() and grid[x_end][y_end-1].is_wall():
-        end_directions = [ (1 , 0) , (-1 , 0) , (0 , -1) , (0 , 1) ] #up down left right
+    end_directions = [ (1 , 0) , (-1 , 0) , (0 , -1) , (0 , 1) ] #up down left right
+    near_outer_wall = 0
+
+    if grid[x_end+1][y_end].is_outer_wall():
+        near_outer_wall += 1
+    if grid[x_end-1][y_end].is_outer_wall():
+        near_outer_wall += 1
+    if grid[x_end][y_end+1].is_outer_wall():
+        near_outer_wall += 1
+    if grid[x_end][y_end-1].is_outer_wall():
+        near_outer_wall += 1
+
+    if near_outer_wall >= 2:
+        for row , col in end_directions:
+            grid[x_end+row][y_end+col].reset()
+
+
+    if (grid[x_end+1][y_end].is_wall() and 
+        grid[x_end-1][y_end].is_wall() and 
+        grid[x_end][y_end+1].is_wall() and 
+        grid[x_end][y_end-1].is_wall()):
+
         random.shuffle(end_directions)
-        
         row , col = end_directions[1]
         grid[x_end+row][y_end+col].reset()
     
