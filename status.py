@@ -3,7 +3,7 @@ import pygame
 import color
 
 #UI
-def draw_info_window(win, width, stats):
+def draw_info_window(win, width, stats , speed):
     info_width = 300  
     info_height = width  
     
@@ -20,13 +20,15 @@ def draw_info_window(win, width, stats):
     y_offset = 60
     line_height = 30
      
+     # Status
     info_items = [
         ("Algorithm:", stats.get('algorithm', 'None')),
         ("Time:", f"{stats.get('time', 0):.3f}s"),
         ("Nodes Opened:", str(stats.get('nodes_opened', 0))),
         ("Nodes Closed:", str(stats.get('nodes_closed', 0))),
         ("Path Length:", str(stats.get('path_length', 0))),
-        ("Status:", stats.get('status', 'Ready'))
+        ("Status:", stats.get('status', 'Ready')),
+        ("Speed:" , str(stats.get('speed', speed)))
     ]
     
     for label, value in info_items:
@@ -38,6 +40,7 @@ def draw_info_window(win, width, stats):
     
     y_offset += 25
     instructions = [
+        "Esc -- Quit ",
         "Left Click -- Place Start/End/Wall",
         "Right Click -- Remove Start/End/Wall",
         "M -- Generate Maze",
