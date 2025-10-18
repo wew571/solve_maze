@@ -18,9 +18,6 @@ class Node:
     def reset(self):
         self.color = color.Back_Ground
 
-    def make_close(self):
-        self.color = color.Path_Close
-
     def make_close_astar(self):
         self.color = color.Path_Close_Astar
     
@@ -33,8 +30,8 @@ class Node:
     def make_close_bestfs(self):
         self.color = color.Path_Close_BestFS
 
-    def make_open(self):
-        self.color = color.Path_Open
+    def make_close_dijkstra(self):
+        self.color = color.Path_Close_Dijkstra
 
     def make_open_astar(self):
         self.color = color.Path_Open_Astar
@@ -47,6 +44,9 @@ class Node:
 
     def make_open_bestfs(self):
         self.color = color.Path_Open_BestFS
+
+    def make_open_dijkstra(self):
+        self.color = color.Path_Open_Dijkstra
 
     def make_wall(self):
         self.color = color.Wall
@@ -62,12 +62,6 @@ class Node:
 
     def make_path(self):
         self.color = color.Path
-
-    def is_closed(self):
-        return self.color == color.Path_Close
-
-    def is_opened(self):
-        return self.color == color.Path_Open
 
     def is_wall(self):
         return self.color == color.Wall
@@ -87,6 +81,9 @@ class Node:
     def is_bestfs_open(self):
         return self.color == color.Path_Open_BestFS
     
+    def is_dijkstra_open(self):
+        return self.color == color.Path_Open_Dijkstra
+    
     def is_astar_close(self):
         return self.color == color.Path_Close_Astar
     
@@ -98,6 +95,9 @@ class Node:
     
     def is_bestfs_close(self):
         return self.color == color.Path_Close_BestFS
+    
+    def is_dijkstra_close(self):
+        return self.color == color.Path_Close_Dijkstra
     
     def is_start(self):
         return self.color == color.Start
