@@ -42,18 +42,21 @@ def main(win , width):
     End = None
     Run = True
 
+    speed = 5
+
     stats = {
         'algorithm': 'None',
         'time': 0.0,
         'nodes_opened': 0,
         'nodes_closed': 0,
         'path_length': 0,
-        'status': 'Ready'
+        'status': 'Ready',
+        'speed' : speed
     }
 
     while Run:
         draw(win, grid, ROWS, width)
-        draw_info_window(win, width, stats)
+        draw_info_window(win, width, stats , speed)
         pygame.display.update()
 
         for e in pygame.event.get():
@@ -152,7 +155,7 @@ def main(win , width):
                         for spot in row:
                             spot.update_neighbours(grid)
 
-                    res = astar.algorithm(lambda: draw(win, grid, ROWS, width), grid, Start, End, counter_start)
+                    res = astar.algorithm(lambda: draw(win, grid, ROWS, width), grid, Start, End, counter_start , speed)
 
                     if res:
                         stats['time'] = res['time']
