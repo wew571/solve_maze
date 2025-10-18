@@ -1,3 +1,6 @@
+#Entire value of color I get from this web
+#https://rgbacolorpicker.com/
+
 Back_Ground = (0 , 0 , 0 , 1)
 
 Path_Open = (125, 125, 125 , 1)
@@ -26,4 +29,5 @@ UI_Title = (255 , 0 , 255, 1)
 UI_Text = ( 0 , 255 , 0 , 1 )
 UI_Status_Text = ( 0 , 255 , 255 , 1)
 UI_Guide = ( 255 , 255 , 0 , 1 )
+
 
