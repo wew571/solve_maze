@@ -51,7 +51,8 @@ def main(win , width):
         'nodes_closed': 0,
         'path_length': 0,
         'status': 'Ready',
-        'speed' : speed
+        'speed' : speed ,
+        'difficult' : 'None'
     }
 
     while Run:
@@ -119,31 +120,34 @@ def main(win , width):
                                 spot.is_path()) :
 
                                 spot.reset()
-                                stats = {
+                                stats.update ({
                                     'time': 0.0,
                                     'nodes_opened': 0,
                                     'nodes_closed': 0,
                                     'path_length': 0,
-                                    'status': 'Grid Reset'
-                                }
+                                    'status': 'Path Cleared'
+                                })
 
                 if e.key == pygame.K_m:
                     if Start  and End:
                         grid = maze_generation.dfs_algorithm(lambda : draw(win , grid , ROWS , width) , grid , Start , End)
                         stats['algorithm'] = "DFS Alogorithm"
                         stats['status'] = "Maze Generated"
+                        stats['difficult'] = "Hard"
 
                 if e.key == pygame.K_n:
                     if Start and End:
                         grid = maze_generation.prims_algorithm(lambda : draw(win , grid , ROWS , width) , grid , Start , End)
                         stats['algorithm'] = "Prims Algorithm"
                         stats['status'] = "Maze Generated"
+                        stats['difficult'] = "Medium"
 
                 if e.key == pygame.K_b:
                     if Start and End:
                         grid = maze_generation.kruskals_algorithm(lambda : draw(win , grid , ROWS , width) , grid , Start , End)
                         stats['algorithm'] = "Kruskals Algorithm"
                         stats['status'] = "Maze Generated"
+                        stats['difficult'] = "Easy"
 
                 if e.key == pygame.K_r and Start and End:
                     counter_start = default_timer()
@@ -192,7 +196,7 @@ def main(win , width):
                         for spot in row:
                             spot.update_neighbours(grid)
 
-                    res = depth_first_search.solve(lambda : draw(win , grid , ROWS , width) , grid , Start , End , counter_start)
+                    res = depth_first_search.solve(lambda : draw(win , grid , ROWS , width) , grid , Start , End , counter_start , speed)
                     if res:
                         stats['time'] = res['time']
                         stats['nodes_opened'] = res['nodes_opened']
@@ -228,7 +232,7 @@ def main(win , width):
                         for spot in row:
                             spot.update_neighbours(grid)
 
-                    res = dijkstra.solve(lambda : draw(win , grid , ROWS , width) , grid , Start , End , counter_start)
+                    res = dijkstra.solve(lambda : draw(win , grid , ROWS , width) , grid , Start , End , counter_start , speed)
                     if res:
                         stats['time'] = res['time']
                         stats['nodes_opened'] = res['nodes_opened']
@@ -240,8 +244,13 @@ def main(win , width):
                     counter_start = default_timer()
                     pygame.display.set_caption("Maze Solver ( Searching... )")
                     stats['algorithm'] = "????"
-                    stats['status'] = "Searching..." 
-
+                    stats['status'] = "Searching..."
+                    stats['time'] = 0.00001
+                    stats['nodes_opened'] = 10**-99
+                    stats['nodes_closed'] = 10**-99
+                    stats['path_length'] = 10**-99
+                    stats['status'] = "Path Found!"
+                    stats['speed'] = float("inf")
 
                 if e.key == pygame.K_e:
                     Start = None
@@ -255,6 +264,32 @@ def main(win , width):
                         'status': 'Grid Reset'
                     }
                     grid = make_grid(ROWS, width) 
+
+                if e.key == pygame.K_UP or e.key == pygame.K_w:
+                    if speed > 0 and speed < 15:
+                        speed += 1
+                    if speed >= 15 and speed < 30:
+                        speed += 5
+                    if speed >= 30 and speed < 100:
+                        speed += 15
+                    if speed >= 100:
+                        speed = 99
+                    stats.update ({
+                        'speed' : speed
+                    })
+                
+                if e.key == pygame.K_DOWN or e.key == pygame.K_s:
+                    if speed >= 30 and speed < 100:
+                        speed -= 15
+                    if speed >= 15 and speed < 30:
+                        speed -= 5
+                    if speed >= 2 and speed < 15:
+                        speed -= 1  
+                    if speed < 1 :
+                        speed = 1
+                    stats.update ({
+                        'speed' : speed
+                    })
 
                 if e.key == pygame.K_ESCAPE:
                     Run = False
