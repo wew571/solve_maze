@@ -6,8 +6,9 @@ import time_solve
 import maze
 
 import numpy
+import pygame
 
-def solve(draw , grid , start , end , counter_start):
+def solve(draw , grid , start , end , counter_start , speed):
     count = 0
     node_path = {}
     queue = PriorityQueue()
@@ -21,13 +22,20 @@ def solve(draw , grid , start , end , counter_start):
     nodes_open = 0
     nodes_close = 0
 
+    draw_count = 0
+    total_draw_time_algorithm = 0
+
     while not queue.empty():
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                pygame.quit()
+
         current = queue.get()[2]
         queue_hash.remove(current)
         nodes_close += 1
 
         if current == end:
-            path_data = time_solve.reconstruct_path(node_path , end , draw , counter_start)
+            path_data = time_solve.reconstruct_path(node_path , end , draw , counter_start , speed , total_draw_time_algorithm)
             start.make_start()
             end.make_end()
             return {
@@ -48,11 +56,17 @@ def solve(draw , grid , start , end , counter_start):
                 if neighbor not in queue_hash:
                     count += 1
                     nodes_open += 1
+                    draw_count += 1
                     queue.put((distance[neighbor] , count , neighbor))
                     queue_hash.add(neighbor)
                     neighbor.make_open_dijkstra()
+                    
+        if draw_count % speed == 0:
+            draw_start = default_timer()
+            draw()
+            draw_end = default_timer()
+            total_draw_time_algorithm += ( draw_end - draw_start)
 
-        draw()
 
         if current != start:
             current.make_close_dijkstra()
