@@ -42,7 +42,7 @@ def main(win , width):
     End = None
     Run = True
 
-    speed = 5
+    speed = 10
 
     stats = {
         'algorithm': 'None',
@@ -174,7 +174,7 @@ def main(win , width):
                         for spot in row:
                             spot.update_neighbours(grid)
 
-                    res = breath_first_search.solve(lambda : draw(win , grid , ROWS , width) , grid , Start , End , counter_start)
+                    res = breath_first_search.solve(lambda : draw(win , grid , ROWS , width) , grid , Start , End , counter_start , speed)
                     if res:
                         stats['time'] = res['time']
                         stats['nodes_opened'] = res['nodes_opened']
@@ -210,7 +210,7 @@ def main(win , width):
                         for spot in row:
                             spot.update_neighbours(grid)
 
-                    res = best_first_search.solve(lambda : draw(win , grid , ROWS , width) , grid , Start , End , counter_start)
+                    res = best_first_search.solve(lambda : draw(win , grid , ROWS , width) , grid , Start , End , counter_start , speed)
                     if res:
                         stats['time'] = res['time']
                         stats['nodes_opened'] = res['nodes_opened']
