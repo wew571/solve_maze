@@ -27,4 +27,8 @@ UI_Title = (255 , 0 , 255, 1)
 UI_Text = ( 0 , 255 , 0 , 1 )
 UI_Status_Text = ( 0 , 255 , 255 , 1)
 UI_Guide = ( 255 , 255 , 0 , 1 )
+UI_Difficult_Easy = ( 0 , 255 , 160 , 1 )
+UI_Difficult_Medium = ( 255 , 254 , 0 , 1 )
+UI_Difficult_Hard = ( 255 , 30 , 0 , 1 )
+UI_Difficult_None = (149 , 149 , 149 , 1)
 
