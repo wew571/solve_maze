@@ -32,3 +32,11 @@ UI_Difficult_Medium = ( 255 , 254 , 0 , 1 )
 UI_Difficult_Hard = ( 255 , 30 , 0 , 1 )
 UI_Difficult_None = (149 , 149 , 149 , 1)
 
+History_Back_Ground = ( 0 , 0 , 0 , 1 )
+History_Front_Title = ( 255 , 125 , 0 , 1)
+History_Title = ( 0 , 245 , 245 , 1)
+History_Text = ( 151 , 151 , 151 , 1)
+History_Status = ( 185 , 0 , 255 , 1 )
+History_Error_Text = (  255 , 0 , 75 , 1 )
+
+
