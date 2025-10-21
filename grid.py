@@ -19,6 +19,7 @@ def draw_grid(win, rows, width):
         pygame.draw.line(win, color.Grid, (0, i * gap), (width, i * gap))
         for j in range(rows):
             pygame.draw.line(win, color.Grid ,(i * gap, 0), (i * gap, width))
+    pygame.draw.line(win , color.Grid , ( 1300 , 0) , ( 1300 , 1600) , 2)
 
 def draw_grid_wall(rows, grid):
     for i in range(rows):
