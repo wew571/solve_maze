@@ -45,15 +45,16 @@ def draw_sub_window(win , width , head ,speed):
     sub_surface  = pygame.Surface((sub_width , sub_height))
     sub_surface.fill(color.History_Back_Ground)
 
-    
-    front_title = pygame.font.SysFont('Arial' , 30 , bold=True )
+    # Draw title
+    front_title = pygame.font.SysFont('Comic Sans MS' , 30 , bold=True )
     title = front_title.render("History" , True , color.History_Front_Title)
-    sub_surface.blit(title , (250 , 10))
+    sub_surface.blit(title , (250 , 0))
 
+    # If there's no history data, show a message and exit
     if head is None:
         font = pygame.font.SysFont('Arial' , 20)
-        no_data_text = pygame.font.SysFont('Arial' , 30 , bold=True)
-        title = no_data_text.render("No history data", True, color.History_Error_Text)
+        no_data_text = pygame.font.SysFont('Comic Sans MS' , 30 , bold=True)
+        title = no_data_text.render("No History Data", True, color.History_Error_Text)
         sub_surface.blit(title, (100, 100))
         win.blit(sub_surface, (width + 300, 0))
         return
@@ -62,10 +63,12 @@ def draw_sub_window(win , width , head ,speed):
     current = head
     node_number = 1
 
+    # Draw up to 5 history nodes
     while current is not None and node_number <= 5:
         stats = current.stat
-        node_title = pygame.font.SysFont('Arial', 30, bold=True)
+        node_title = pygame.font.SysFont('Consolas', 30, bold=True)
 
+        # Calculate row and column position for layout
         row = 0
         col = 0
 
@@ -84,6 +87,7 @@ def draw_sub_window(win , width , head ,speed):
 
         y_offset += 30
         
+        # Prepare and draw node statistics
         node_list = [
             ("Algorithm:", stats.get('algorithm', 'None')),
             ("Time:", f"{stats.get('time', 0.0):.3f}s"),  
@@ -96,6 +100,7 @@ def draw_sub_window(win , width , head ,speed):
             ("Difficult:", stats.get('difficult', 'None'))
         ]
 
+        # Render each label and value pair
         for label, value in node_list:
             label_text = font.render(label, True, color.History_Text)
             value_text = font.render(value, True, color.History_Status)
