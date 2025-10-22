@@ -2,6 +2,8 @@ from timeit import default_timer
 from grid import make_grid
 from grid import draw
 from status import draw_info_window
+from history import draw_sub_window
+from ranking import drawCompareWindow
 
 import color
 import maze_generation
@@ -12,7 +14,11 @@ import depth_first_search
 import best_first_search
 import dijkstra
 
+import history
+import ranking
+
 import pygame
+import copy
 
 pygame.init()
 
@@ -44,14 +50,20 @@ def main(win , width):
 
     speed = 10
 
+    head = None
+    root_time = None
+    root_exploration_ratio = None
+
     stats = {
         'algorithm': 'None',
         'time': 0.0,
         'nodes_opened': 0,
         'nodes_closed': 0,
+        'exploration_ratio' : 0.0,
         'path_length': 0,
         'status': 'Ready',
-        'speed' : speed ,
+        'speed' : speed,
+        'speed_build' : 75,
         'difficult' : 'None'
     }
 
@@ -120,13 +132,13 @@ def main(win , width):
                                 spot.is_path()) :
 
                                 spot.reset()
-                                stats.update ({
-                                    'time': 0.0,
-                                    'nodes_opened': 0,
-                                    'nodes_closed': 0,
-                                    'path_length': 0,
-                                    'status': 'Path Cleared'
-                                })
+
+                    stats['time'] = 0.0
+                    stats['nodes_opened'] = 0 
+                    stats['nodes_closed'] = 0
+                    stats['exploration_ratio'] = 0.0
+                    stats['path_length'] = 0
+                    stats['status'] = "Path Cleared"
 
                 if e.key == pygame.K_m:
                     if Start  and End:
@@ -165,8 +177,14 @@ def main(win , width):
                         stats['time'] = res['time']
                         stats['nodes_opened'] = res['nodes_opened']
                         stats['nodes_closed'] = res['nodes_closed'] 
+                        stats['exploration_ratio'] = res['exploration_ratio']
                         stats['path_length'] = res['path_length']
                         stats['status'] = "Path Found!" if res['path_found'] else "No Path Found"
+
+                        stats_copy = copy.deepcopy(stats)
+                        head = history.insert(head , stats_copy)
+                        root_time = ranking.insertTimeNode(root_time , stats_copy)
+                        root_exploration_ratio = ranking.insertExplorationRatioNode(root_exploration_ratio , stats_copy)
 
                 if e.key == pygame.K_t and Start and End:
                     counter_start = default_timer()
@@ -182,9 +200,15 @@ def main(win , width):
                     if res:
                         stats['time'] = res['time']
                         stats['nodes_opened'] = res['nodes_opened']
-                        stats['nodes_closed'] = res['nodes_closed'] 
+                        stats['nodes_closed'] = res['nodes_closed']
+                        stats['exploration_ratio'] = res['exploration_ratio']
                         stats['path_length'] = res['path_length']
-                        stats['status'] = "Path Found!" if res['path_found'] else "No Path Found"        
+                        stats['status'] = "Path Found!" if res['path_found'] else "No Path Found" 
+
+                        stats_copy = copy.deepcopy(stats)
+                        head = history.insert(head , stats_copy)  
+                        root_time = ranking.insertTimeNode(root_time , stats_copy)
+                        root_exploration_ratio = ranking.insertExplorationRatioNode(root_exploration_ratio , stats_copy)
 
                 if e.key == pygame.K_y and Start and End:
                     counter_start = default_timer()
@@ -200,9 +224,15 @@ def main(win , width):
                     if res:
                         stats['time'] = res['time']
                         stats['nodes_opened'] = res['nodes_opened']
-                        stats['nodes_closed'] = res['nodes_closed'] 
+                        stats['nodes_closed'] = res['nodes_closed']
+                        stats['exploration_ratio'] = res['exploration_ratio'] 
                         stats['path_length'] = res['path_length']
-                        stats['status'] = "Path Found!" if res['path_found'] else "No Path Found"   
+                        stats['status'] = "Path Found!" if res['path_found'] else "No Path Found"
+
+                        stats_copy = copy.deepcopy(stats)
+                        head = history.insert(head , stats_copy)
+                        root_time = ranking.insertTimeNode(root_time , stats_copy)
+                        root_exploration_ratio = ranking.insertExplorationRatioNode(root_exploration_ratio , stats_copy)
 
                 if e.key == pygame.K_u and Start and End:
                     counter_start = default_timer()
@@ -218,9 +248,15 @@ def main(win , width):
                     if res:
                         stats['time'] = res['time']
                         stats['nodes_opened'] = res['nodes_opened']
-                        stats['nodes_closed'] = res['nodes_closed'] 
+                        stats['nodes_closed'] = res['nodes_closed']
+                        stats['exploration_ratio'] = res['exploration_ratio'] 
                         stats['path_length'] = res['path_length']
                         stats['status'] = "Path Found!" if res['path_found'] else "No Path Found"
+
+                        stats_copy = copy.deepcopy(stats)
+                        head = history.insert(head , stats_copy)
+                        root_time = ranking.insertTimeNode(root_time , stats_copy)
+                        root_exploration_ratio = ranking.insertExplorationRatioNode(root_exploration_ratio , stats_copy)
 
                 if e.key == pygame.K_i and Start and End:
                     counter_start = default_timer()
@@ -237,8 +273,14 @@ def main(win , width):
                         stats['time'] = res['time']
                         stats['nodes_opened'] = res['nodes_opened']
                         stats['nodes_closed'] = res['nodes_closed'] 
+                        stats['exploration_ratio'] = res['exploration_ratio']
                         stats['path_length'] = res['path_length']
                         stats['status'] = "Path Found!" if res['path_found'] else "No Path Found"
+
+                        stats_copy = copy.deepcopy(stats)
+                        head = history.insert(head , stats_copy)
+                        root_time = ranking.insertTimeNode(root_time , stats_copy)
+                        root_exploration_ratio = ranking.insertExplorationRatioNode(root_exploration_ratio , stats_copy)
 
                 if e.key == pygame.K_o:
                     counter_start = default_timer()
@@ -251,6 +293,11 @@ def main(win , width):
                     stats['path_length'] = 10**-99
                     stats['status'] = "Path Found!"
                     stats['speed'] = float("inf")
+
+                if e.key == pygame.K_g:
+                    head = history.reset_node(head)
+                    root_time = ranking.resetTimeNode(root_time)
+                    root_exploration_ratio = ranking.resetExplorationRatio(root_exploration_ratio)
 
                 if e.key == pygame.K_e:
                     Start = None
@@ -268,7 +315,7 @@ def main(win , width):
                 if e.key == pygame.K_UP or e.key == pygame.K_w:
                     if speed > 0 and speed < 15:
                         speed += 1
-                    if speed >= 15 and speed < 30:
+                    if speed >= 13 and speed < 30:
                         speed += 5
                     if speed >= 30 and speed < 100:
                         speed += 15
@@ -293,6 +340,8 @@ def main(win , width):
 
                 if e.key == pygame.K_ESCAPE:
                     Run = False
-
+                    
+        draw_sub_window(win , width , head , speed)
+        drawCompareWindow(win , width , root_time , root_exploration_ratio , speed)
     pygame.quit()
 
