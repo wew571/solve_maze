@@ -25,10 +25,16 @@ def algorithm(draw, grid, start, end, counter_start , speed):
 
     nodes_open = 0
     nodes_close = 0
+    total_nodes = 0
 
     draw_count = 0
     total_draw_time_algorithm = 0
     
+    for row in grid:
+        for spot in row:
+            if not spot.is_wall() and not spot.is_outer_wall():
+                total_nodes += 1
+
     open_set_hash = {start}
     while not open_set.empty():
         for e in pygame.event.get():
@@ -40,15 +46,17 @@ def algorithm(draw, grid, start, end, counter_start , speed):
         nodes_close += 1
 
         if current == end:
+            exploration_ratio = nodes_close / total_nodes * 100
             path_data = time_solve.reconstruct_path(node_path, end, draw, counter_start , speed , total_draw_time_algorithm)
             end.make_end()
             start.make_start()
             return {
                 'time': path_data['time'],
-                'nodes_opened': nodes_open,
-                'nodes_closed': nodes_close,
-                'path_length': path_data['path_length'],
-                'path_found': True
+                'nodes_opened' : nodes_open,
+                'nodes_closed' : nodes_close,
+                'exploration_ratio' : exploration_ratio,
+                'path_length' : path_data['path_length'],
+                'path_found' : True
             }
 
         for neighbour in current.neighbours:
@@ -76,12 +84,14 @@ def algorithm(draw, grid, start, end, counter_start , speed):
         if current != start:
             current.make_close_astar()
 
+    exploration_ratio = nodes_close / total_nodes * 100 
     pygame.display.set_caption("Maze Solver ( Unable To Find The Target Node ! )")
 
     return {
         'time': default_timer() - counter_start,
-        'nodes_opened': nodes_open,
-        'nodes_closed': nodes_close,
-        'path_length': 0,
-        'path_found': False
+        'nodes_opened' : nodes_open,
+        'nodes_closed' : nodes_close,
+        'exploration_ratio' : exploration_ratio ,
+        'path_length' : 0,
+        'path_found' : False
     }
